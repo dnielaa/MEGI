@@ -1,5 +1,5 @@
 # MEGI
-Proyecto para la asignatura de Investigación Operativa.
+En este repositorio se publicará la solución al siguiente problema de Investigación Operativa sobre un escenario ficticio.
 # Caso práctico: Optimización y rediseño de la cadena de suministro
 
 ## 1. Descripción general del problema
