@@ -1,5 +1,5 @@
 # MEGI
-En este repositorio se publicará la solución al siguiente problema de Investigación Operativa sobre un escenario ficticio.
+En este repositorio se publicará la solución al siguiente problema de Investigación Operativa sobre un escenario ficticio. Este código es para uso educativo/personal. Está prohibido su uso para trabajos académicos, tareas, exámenes o proyectos finales sin autorización expresa.
 # Caso práctico: Optimización y rediseño de la cadena de suministro
 
 ## 1. Descripción general del problema
