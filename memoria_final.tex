@@ -1,0 +1,727 @@
+\documentclass[12pt]{article}
+\usepackage{amsthm}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+\usepackage{amsmath}
+\usepackage[spanish]{babel}
+\usepackage{mathrsfs}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{array}
+\usepackage[utf8]{inputenc}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{amssymb}
+\usepackage{ragged2e}
+\usepackage{adjustbox}
+
+
+
+
+\title{Informe}
+\author{Daniela Ioana Iacobita, David Lavado Peña y Rodrigo López Torres}
+\renewcommand{\baselinestretch}{1,5}
+
+
+\begin{document}
+\begin{titlepage}
+    \centering
+    {\bfseries\LARGE Universidad Rey Juan Carlos \par}
+\vspace{1cm}
+{\scshape\Large Escuela Técnica Superior de Ingeniería Informática \par}
+\vspace{3cm}
+{\scshape\Huge Informe \par}
+\vspace{3cm}
+{\itshape\Large Actividad grupal de Métodos Estadísticos para la Gestión e Investigación \par}
+\vfill
+{\Large Daniela Ioana Iacobita, David Lavado Peña y  Rodrigo López Torres \par}
+\vfill
+{\Large 8 de abril, 2025 \par}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+%--------------------------------------------------------------------------------------------------------
+
+\section{Descripción del problema. Primera parte}
+A continuación vamos a ver la primera parte de un problema que plantearemos en esta sección. Tras obtener la solución de 
+esta parte, presentaremos la segunda parte del problema, con su modificación del enunciado.
+Se nos plantea un problema de optimización lineal continua donde debemos decidir la compra, producción y envío de ciertos productos de una petroquímica.
+Dicha petroquímica puede comprar petróleo, en barriles de 159 litros, de cuatro suministradores, por un precio de 47, 49, 53 y 51 euros el barril respectivamente, y 
+enviarlos a sus tres refinerías, por ciertos costes de envío. 
+\begin{center}
+Tabla de costes de envío (euros)
+\end{center}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|}
+    \hline
+    Suministrador & Refinería 1 & Refinería 2 & Refinería 3 \\ \hline
+    A             & 0,4         & 0,3         & 0,3         \\ \hline
+    B             & 0,4         & 0,4         & 0,4         \\ \hline
+    C             & 0,2         & 0,5         & 0,4         \\ \hline
+    D             & 0,4         & 0,3         & 0,2         \\ \hline
+    \end{tabular}
+    \end{table}
+
+
+\indent Cada barril de petróleo va a producir un cierta cantidad de gasolina, gas-oil y queroseno, según 
+el suministrador del que proceda. Además, para trabajar el petróleo de los barriles, cada refinería va a tener
+un coste de producción asociado a las distintas sustancias.
+\newpage
+\begin{center}
+Tabla de sustancias obtenidas por barril de petróleo (litros)
+\end{center}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|}
+    \hline
+    Suministrador & Gasolina & Gas-oil & Queroseno \\ \hline
+    A             & 72       & 35      & 10        \\ \hline
+    B             & 80       & 37      & 12        \\ \hline
+    C             & 69       & 50      & 8         \\ \hline
+    D             & 80       & 20      & 15        \\ \hline
+    \end{tabular}
+    \end{table}
+    \begin{center}
+Tabla de costes de producción de los productos por litro (euros)\end{center}
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|l|l|l|l|}
+        \hline
+        Producto  & Refinería 1 & Refinería 2 & Refinería 3 \\ \hline
+        Gasolina  & 0,021       & 0,011       & 0,013       \\ \hline
+        Gas-oil   & 0,015       & 0,062       & 0,082       \\ \hline
+        Queroseno & 0,010       & 0,033       & 0,041       \\ \hline
+        \end{tabular}
+        \end{table}
+
+
+Se sabe que hay cuatro regiones a las que debe envíar su producción: España, Portugal, Francia y el 
+Norte de África. No se nos dice que haya ningún coste de envío desde las refinerías hasta las regiones.
+Para cada zona se nos da una demanda, es decir, no se va a comprar más producto del que dicta dicha demanda.
+\begin{center}
+Tabla de la demanda de cada producto en cada región (millones de litros)
+\end{center}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|}
+    \hline
+    Producto  & España & Portugal & Francia & N. de África \\ \hline
+    Gasolina  & 20     & 10       & 10      & 25           \\ \hline
+    Gas-oil   & 15     & 6        & 8       & 10           \\ \hline
+    Queroseno & 10     & 3        & 4       & 12           \\ \hline
+    \end{tabular}
+    \end{table}
+
+Además, para cada región y producto se va a tener un beneficio por venta.
+\begin{center}
+Tabla de beneficios por producto y región (euros)\end{center}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|}
+    \hline
+    Producto  & España & Portugal & Francia & N. de África \\ \hline
+    Gasolina  & 0,5    & 0,45     & 0,6     & 0,55         \\ \hline
+    Gas-oil   & 0,45   & 0,55     & 0,45    & 0,35         \\ \hline
+    Queroseno & 0,15   & 0,10     & 0,15    & 0,12         \\ \hline
+    \end{tabular}
+    \end{table}
+
+Con todos estos datos debemos hallar la solución óptima del problema, en caso de que la haya.
+
+\begin{center}
+    \includegraphics[scale=0.34]{Grafo}
+    \captionof{figure}[LOF entry]{Grafo ilustrativo del problema}   
+    \label{fig:picture}
+  \end{center}
+
+
+%----------------------------------------------------------------------------------------------
+
+
+\section{Estrategia de resolución del problema. Primera parte}
+Tratándose de un problema de optimización lineal, proponemos 
+la siguiente interpretación de los datos del problema.
+Vamos a definir las variables y sus conjuntos de índices:\newline
+Conjunto de suministradores $\mathrm{I}= \{A,B,C,D\}$.\newline
+Conjunto de refinerías $\mathrm{J}=\{1,2,3\}$.\newline
+Abreviaciones y conjunto de regiones: España (E), Portugal (P), Francia (F), Norte de África (N),
+$\mathrm{K}=\{E,P,F,N\}$.\newline
+Conjunto de productos: $\mathrm{P}=\{G,O,Q\}$, siendo gasolina (G), gas-oil (O) y queroseno (Q).
+$x_{ij} =$ "Número de barriles comprados del suministrador i y llevados a la refinería j"(12 variables).\newline
+$g_{jk} =$ ''Cantidad de gasolina producida en la refinería j y enviados a la región k"(12 variables).\newline
+$o_{jk}= $ ''Cantidad de gas-oil producido en la refinería j y enviados a la región k"(12 variables).\newline
+$q_{jk}= $ ''Cantidad de queroseno producido en la refinería j y enviados a la región k"(12 variables).\newline
+
+Los parámetros del problema son:
+\begin{enumerate}
+    \item Los precios de los barriles, cuyos valores vienen en el enunciado.
+    \item Los valores mínimos y máximos de compra de barriles, que se indica en el enunciado.
+    \item Los litros que se pueden producir de gasolina, gas-oil y queroseno de cada barril: $\alpha_{ip}$, 
+    para $i\in\mathrm{I}$ y $p\in\mathrm{P}$, cuyos valores vienen en la "Tabla de sustancias obtenidas por barril de petróleo (litros)"
+    \item Los gastos de envío de materiales de cada suministrador a las refinerías, cuyos valores estarán en la "Tabla de costes de envío (euros)"
+    \item La demanda de las regiones para cada producto: $\beta_{kp}$, para
+    $k\in\mathrm{K}$ y $p\in\mathrm{P}$, cuyos valores se pueden encontrar en la 
+    "Tabla de la demanda de cada producto en cada región (millones de litros)"
+    \item Los gastos de producción cuyos valores están en la "Tabla de costes de producción de los productos por litro (euros)"
+    \item Los ingresos netos por litro de sustancias, cuyos valores los encontramos en la "Tabla de beneficios por producto y región (euros)"
+\end{enumerate}
+
+Para definir la función objetivo vamos a analizar los ingresos y los gastos del 
+problema, en el orden en el que aparecerán posteriormente.
+
+Primero vamos a considerar los ingresos. Los únicos ingresos que se tienen son de la venta de los productos 
+fabricados por las refinerías. Es decir, se multiplicará el parámetro del valor de venta por la 
+cantidad vendida, para cada región y producto. 
+
+A continuación comenzamos con la enumeración de los gastos. El primer gasto que nos encontramos es 
+la compra de suministros que consistirá en multiplicar el precio del barril de cada suministrador por 
+la cantidad comprada a este, de todas las refinerías. El siguiente coste es el del transporte, donde 
+se multiplicará el valor del envío por la cantidad envíada, de cada suministrador a cada refinería.
+Por último, debemos incluir los gastos de producción, donde tendremos en cuenta dos tipos de parámetro. 
+El primero es el coste de producción y el segundo es la cantidad de cada producto que se obtiene de cada tipo 
+de barril. 
+
+
+Con el análisis realizado vamos a representar el sistema de ecuaciones 
+y la función objetivo:
+\begin{center}
+    
+máx. $z =  0.5\cdot(\sum_{j\in\mathrm{J}}^{}g_{jE}) + 0.45\cdot(\sum_{j\in\mathrm{J}}^{}g_{jP}) 
++ 0.6\cdot(\sum_{j\in\mathrm{J}}^{}g_{jF}) + 0.55\cdot(\sum_{j\in\mathrm{J}}^{}g_{jN}) + $
+
+$0.45\cdot(\sum_{j\in\mathrm{J}}^{}o_{jE})+ 0.55\cdot(\sum_{j\in\mathrm{J}}^{}o_{jP}) + 
+0.45\cdot(\sum_{j\in\mathrm{J}}^{}o_{jF}) + 0.35\cdot(\sum_{j\in\mathrm{J}}^{}o_{jN})+$
+
+$0.15\cdot(\sum_{j\in\mathrm{J}}^{}q_{jE})+ 0.10\cdot(\sum_{j\in\mathrm{J}}^{}q_{jP}) + 
+0.15\cdot(\sum_{j\in\mathrm{J}}^{}q_{jF}) + 0.12\cdot(\sum_{j\in\mathrm{J}}^{}q_{jN})$
+
+$- \Bigl[47\cdot(\sum_{j\in\mathrm{J}}^{}x_{Aj})+ 49\cdot(\sum_{j\in\mathrm{J}}^{}x_{Bj}) 
++ 53\cdot(\sum_{j\in\mathrm{J}}^{}x_{Cj}) + 51\cdot(\sum_{j\in\mathrm{J}}^{}x_{Dj})$
+
+$ + 0.4\cdot x_{A1} + 0.3\cdot x_{A2} + 0.3\cdot x_{A3} $
+
+$ + 0.4\cdot x_{B1} + 0.4\cdot x_{B2} + 0.4\cdot x_{B3}$
+
+$ + 0.2\cdot x_{C1} + 0.5\cdot x_{C2} + 0.4\cdot x_{C3}$
+
+$ + 0.4\cdot x_{D1} + 0.3\cdot x_{D2} + 0.2\cdot x_{D3}$
+
+$+0.021\cdot (72\cdot x_{A1}+80\cdot x_{B1} + 69\cdot x_{C1} + 80\cdot x_{D1})$
+
+$+ 0.011\cdot (72\cdot x_{A2}+80\cdot x_{B2} + 69\cdot x_{C2} + 80\cdot x_{D2})$
+
+$ + 0.013\cdot (72\cdot x_{A3}+80\cdot x_{B3} + 69\cdot x_{C3} + 80\cdot x_{D3})$
+
+$+ 0.015\cdot (35\cdot x_{A1}+37\cdot x_{B1} + 50\cdot x_{C1} + 20\cdot x_{D1})$
+
+$ + 0.062\cdot (35\cdot x_{A2}+37\cdot x_{B2} + 50\cdot x_{C2} + 20\cdot x_{D2})$
+
+$+ 0.082\cdot (35\cdot x_{A3}+37\cdot x_{B3} + 50\cdot x_{C3} + 20\cdot x_{D3})$
+
+$ + 0.010\cdot (10\cdot x_{A1}+12\cdot x_{B1} + 8\cdot x_{C1} + 15\cdot x_{D1})$
+
+$ + 0.033\cdot (10\cdot x_{A2}+12\cdot x_{B2} + 8\cdot x_{C2} + 15\cdot x_{D2})$
+
+$ + 0.041\cdot (10\cdot x_{A3}+12\cdot x_{B3} + 8\cdot x_{C3} + 15\cdot x_{D3})\Bigr]$
+
+\end{center}
+
+    
+
+Restricciones por mínimos y máximos en la compra de barriles (8 restricciones):
+\begin{center}
+$\sum_{j\in\mathrm{J}}^{}x_{ij}\ge 100000$, para cada $i\in\mathrm{I}$
+
+$\sum_{j\in\mathrm{J}}^{}x_{ij}\leq 500000$, para cada $i\in\mathrm{I}$
+\end{center}
+
+    
+
+Restricciones por demandas (12 restricciones):
+\begin{center}
+$\sum_{j\in\mathrm{J}}^{}g_{jk}\leq\beta_{kG}$ para cada $k\in\mathrm{K}$
+
+$\sum_{j\in\mathrm{J}}^{}o_{jk}\leq\beta_{kO}$ para cada $k\in\mathrm{K}$
+
+$\sum_{j\in\mathrm{J}}^{}q_{jk}\leq\beta_{kQ}$ para cada $k\in\mathrm{K}$
+\end{center}
+
+Restricciones de producción-recursos (9 restricciones):
+\begin{center}
+    $\sum_{k\in\mathrm{K}}^{}g_{jk}\leq \sum_{i\in\mathrm{I}}^{}x_{ij}\cdot\alpha_{iG}$, para cada $j\in\mathrm{J}$
+
+    $\sum_{k\in\mathrm{K}}^{}o_{jk}\leq \sum_{i\in\mathrm{I}}^{} x_{ij}\cdot\alpha_{iO}$, para cada $j\in\mathrm{J}$
+
+    $\sum_{k\in\mathrm{K}}^{}q_{jk}\leq \sum_{i\in\mathrm{I}}^{} x_{ij}\cdot\alpha_{iQ}$, para cada $j\in\mathrm{J}$
+
+\end{center}
+
+No olvidemos también la no negatividad de todas las variables definidas.
+
+Utilizaremos las mismas variables, restricciones y función objetivo en el programa de 
+GAMS para valorar la factibilidad del problema y, en caso de ser factible, el tipo de solución y
+la solución óptima. 
+\newpage
+
+%---------------------------------------------------------------------------------------------------------------
+
+\section{Solución propuesta. Primera parte}
+
+Al introducir el modelo en el programa obtenemos la siguiente solución óptima:
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|l|l|l|l|l|l|l|l|}
+            \hline
+            Variable       & Valor & Variables & Valor & Variable & Valor & Variable & Valor \\ \hline
+    $x_{A1}$         & 100000     & $g_{1E}$ & 20000000   & $o_{1E}$ & 15000000   & $q_{1E}$ & 5300000  \\ \hline
+    $x_{A2}$         & 0          & $g_{2E}$ & 0          & $o_{2E}$ & 0          & $q_{2E}$ & 0        \\ \hline
+    $x_{A3}$         & 0          & $g_{3E}$ & 0          & $o_{3E}$ & 0          & $q_{3E}$ & 0        \\ \hline
+    $x_{B1}$         & 500000     & $g_{1P}$ & 7100000    & $o_{1P}$ & 6000000    & $q_{1P}$ & 0        \\ \hline
+    $x_{B2}$         & 0          & $g_{2P}$ & 0          & $o_{2P}$ & 0          & $q_{2P}$ & 0        \\ \hline
+    $x_{B3}$         & 0          & $g_{3P}$ & 0          & $o_{3P}$ & 0          & $q_{3P}$ & 0        \\ \hline
+    $x_{C1}$         & 100000     & $g_{1F}$ & 10000000   & $o_{1F}$ & 8000000    & $q_{1F}$ & 4000000  \\ \hline
+    $x_{C2}$         & 0          & $g_{2F}$ & 0          & $o_{2F}$ & 0          & $q_{2F}$ & 0        \\ \hline
+    $x_{C3}$         & 0          & $g_{3F}$ & 0          & $o_{3F}$ & 0          & $q_{3F}$ & 0        \\ \hline
+    $x_{D1}$         & 100000     & $g_{1N}$ & 25000000   & $o_{1N}$ & 0          & $q_{1N}$ & 0        \\ \hline
+    $x_{D2}$         & 0          & $g_{2N}$ & 0          & $o_{2N}$ & 0          & $q_{2N}$ & 0        \\ \hline
+    $x_{D3}$         & 0          & $g_{3N}$ & 0          & $o_{3N}$ & 0          & $q_{3N}$ & 0        \\ \hline
+    \end{tabular}
+    \caption{Tabla de valores de la solución de la primera parte del problema}
+\end{table}
+
+Por como hemos definido las variables obtenemos las siguientes conclusiones. 
+Debemos comprar 100000 barriles de petróleo al suministrador A, 500000 barriles al suministrador B, 100000 barriles al suministrador D y 
+todos ellos llevarlos a la refinería 1. Dado que únicamente llegarán recursos a la refinería 1, la más rentable, también se producirán 
+allí los derivados del petróleo. La gasolina será repartida de la siguiente manera: 20000000 litros a España, 7100000 litros a Portugal, 
+10000000 litros a Francia y 25000000 litros al Norte de África.
+
+En cuanto al gas-oil, su distribución será la siguiente: 15000000 litros a España, 6000000 litros a Portugal y 8000000 litros a Francia.
+
+En cuanto al queroseno, hemos observado lo siguiente: el precio del queroseno es el mismo para 
+España y para Francia y, a diferencia del gas-oil que cumple lo anterior también, la demanda no 
+se cumple en España. Dado que no hay otro parámetro asociado al envío de queroseno a dichas 
+regiones, la cantidad de queroseno puede variar. El margen es el siguiente:
+\begin{center}
+$q_{1E} + q_{1F}=9300000$
+
+$q_{1E}\leq10000000$
+
+$q_{1F}\leq4000000$
+\end{center}
+
+La solución que proporciona el programa es una de las soluciones posibles, pero cualquier valor que 
+cumpla las restricciones anteriores asegura, junto con los demás valores sin modificar de las demás 
+variables, una solución óptima.
+
+Con esta distribución de recursos se obtiene un beneficio de 6257900 euros.
+
+Observando los resultados obtenidos podemos apreciar que la refinería que se usa es la número uno, puesto que es la que dará una rentabilidad general mejor. 
+
+Desde un inicio, antes de formular el modelo, nos dimos cuenta de que no se podrían cumplir todas las demandas, como es el caso del queroseno. La demanda de todos los países es, 
+en total, de 29 millones de litros, pero, por los límites de medio millón de barriles por 
+suministrador y la cantidad de queroseno que se puede obtener de cada uno de los barriles, como máximo se podrían llegar a fabricar 22,5 millones de 
+litros de queroseno, por lo que se ve que la demanda jamás podría llegar a cumplirse. Es decir, no es de extrañar tampoco que el resultado más rentable 
+no cumpla todas las demandas. 
+
+Además, los gastos por el tratamiento de los productos en la refinería y el transporte del suministrador a la propia refinería hacen que también haya 
+un coste bastante significativo. Si modificamos el problema para que lo resuelva, en nuestro caso, GAMS estudio, creando una variable de 
+gastos y otra de ganancias, en la solución óptima podemos apreciar que se consigue una ganancia de casi 48 millones de euros, pero que hay un pago de más 
+de 41 millones de euros. Es decir, no es de extrañar que la ganancia sea de 6 millones de euros (aprox.) teniendo en cuenta los altos costes y que si intentasemos 
+suplir con más producto para acercarnos a las demás demandas, la ganancia sería menor.
+
+\begin{center}
+    \includegraphics[scale=0.4]{grafo2}
+    \captionof{figure}[LOF entry]{Grafo ilustrativo de la solución óptima de GAMS. Primera parte}   
+    \label{fig:picture}
+  \end{center}
+  \newpage
+
+
+
+%---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+\section{Descripción del problema. Segunda parte}
+La segunda parte del problema consta de un rediseño de la cadena de suministro del problema 
+inicial. La empresa ha decidido, en vista a la solución anterior, cerrar una de sus refinerías, es 
+decir, operar desde exactamente dos de ellas. Aquellas dos refinerías activas van a tener que cumplir 
+con un mínimo de dos suministradores a los que comprarles materias primas, y a un máximo de 
+tres.
+
+Para que una refinería esté activa deberá pagar un coste fijo de funcionamiento, independiente de 
+la producción que se lleve dentro de dicha refinería. Los costes son de 0.50, 0.70 y 0.75 millones 
+de euros para las refinerías 1, 2 y 3 respectivamente.
+
+En caso de que la refinería 1 exporte los tres productos de la petroquímica al mercado 
+portugués, deberá pagar una penalización de 100000 euros. En caso de no vender la variedad de 
+tres productos a dicho mercado, no pagará penalización.
+
+La petroquímica, además, no deberá comprar productos a los cuatro suministradores, sino que 
+el mínimo y el máximo de compra sólo se aplicará a los suministradores que se elijan.
+
+Finalmente, se evitará una concentración excesiva, imponiendo que, si se le compra producto 
+a uno de los suministradores, esta compra debe representar entre el 20\% y el 60\% de las compras 
+totales de todas las refinerías. 
+
+
+
+%--------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+\section{Estrategia de resolución del problema. Segunda parte}
+
+El nuevo enunciado conserva gran parte del problema anterior, por lo que vamos 
+a reciclar el modelo que ya tenemos, en particular las variables y parámetros.
+
+Recordemos los conjuntos de índices  y las variables ya definidas:\newline
+Conjunto de suministradores $\mathrm{I}= \{A,B,C,D\}$.\newline
+Conjunto de refinerías $\mathrm{J}=\{1,2,3\}$.\newline
+Abreviaciones y conjunto de regiones: España (E), Portugal (P), Francia (F), Norte de África (N),
+$\mathrm{K}=\{E,P,F,N\}$.\newline
+Conjunto de productos: $\mathrm{P}=\{G,O,Q\}$, siendo gasolina (G), gas-oil (O) y queroseno (Q).
+
+
+Variables del modelo anterior:\newline
+$x_{ij} =$ "Número de barriles comprados del suministrador i y llevados a la refinería j"(12 variables).\newline
+$g_{jk} =$ ''Cantidad de gasolina producida en la refinería j y enviados a la región k"(12 variables).\newline
+$o_{jk}= $ ''Cantidad de gas-oil producido en la refinería j y enviados a la región k"(12 variables).\newline
+$q_{jk}= $ ''Cantidad de queroseno producido en la refinería j y enviados a la región k"(12 variables).\newline
+
+En este nuevo modelo vamos a añadir algunas variables más. 
+
+Entre las variables continuas, añadiremos una variable del total comprado, 
+ya que se nos impone comprar un mínimo en tanto por ciento de dicha cantidad: 
+$t_c$.
+
+A continuación comenzamos a definir las variables binarias, teniendo en cuenta que 
+0 representa un estado inactivo y 1 un estado activo:\newline
+$br_{j}$ = ''Estado de la refinería j" (3 variables)\newline
+$bm_{jk}$ = ''Estado del mercado entre la refinería j y la región k" (12 variables)\newline
+$bs_{ij}$ = ''Estado de la compra entre el suministrador i y la refinería j" (12 variables)\newline
+$p_1$ = ''Estado de la penalización de venta a Portugal" (1 variable)\newline
+$b_p$ = "Venta del producto p de la refinería 1 a Portugal" (3 variables)\newline
+$bpide_i$ = ''Estado del uso del suministrador i" (4 variables) \newline
+
+Los parámetros antiguos, que conservaremos, son los siguientes:
+\begin{enumerate}
+    \item Los precios de los barriles, cuyos valores vienen en el enunciado.
+    \item Los valores mínimos y máximos de compra de barriles, que se indica en el enunciado.
+    \item Los litros que se pueden producir de gasolina, gas-oil y queroseno de cada barril: $\alpha_{ip}$, 
+    para $i\in\mathrm{I}$ y $p\in\mathrm{P}$, cuyos valores vienen en la "Tabla de sustancias obtenidas por barril de petróleo (litros)"
+    \item Los gastos de envío de materiales de cada suministrador a las refinerías, cuyos valores estarán en la "Tabla de costes de envío (euros)"
+    \item La demanda de las regiones para cada producto: $\beta_{kp}$, para
+    $k\in\mathrm{K}$ y $p\in\mathrm{P}$, cuyos valores se pueden encontrar en la 
+    "Tabla de la demanda de cada producto en cada región (millones de litros)"
+    \item Los gastos de producción cuyos valores están en la "Tabla de costes de producción de los productos por litro (euros)"
+    \item Los ingresos netos por litro de sustancias, cuyos valores los encontramos en la "Tabla de beneficios por producto y región (euros)"
+\end{enumerate}
+
+
+Aparte de los parámetos anteriores, vamos a introducir unos nuevos:
+\begin{enumerate}
+    \item El número máximo de refinerías activas, en este caso 2.
+    \item El mínimo y máximo de mercados que puede atender una refinería activa, 2 y 3 respectivamente.
+    \item El mínimo y máximo de suministradores a los que puede comprar una refinería activa, 2 y 3 respectivamente.
+    \item El coste de funcionamiento de la refinería j: $f_j$, cuyos valores están en la descripción de la segunda parte 
+    del problema.
+    \item La penalización de 100000 euros que debe pagar la refinería 1 si vende 3 productos diferentes a Portugal.
+    \item El mínimo de compra de 20\% y el máximo de 60\% de cada refinería activa a cada suministrador.
+\end{enumerate}
+
+
+
+De nuevo haremos un análisis de los ingresos y los costes para poder definir la función objetivo. 
+Cada ingreso y beneficio irá en orden dentro de la función, según se vaya mencionando.
+
+En cuanto a ingresos se tiene, de nuevo, las ventas de los productos, por lo que 
+multiplicaremos el precio de venta por las cantidades vendidas en cada país.
+
+Comenzamos con la enumeración de los costes. Algunos serán los mismos que la primera parte del problema: 
+compra de barriles, envío de suministros a las refinerías y costes de producción de cada producto en cada 
+refinería. A estos les vamos a 
+añadir el coste de funcionamiento de las refinerías, es decir, el valor del coste multiplicado por 
+las variables binarias correspondientes al estado de la refinería y la penalización por venta variada en Portugal 
+que estará multiplicada por su estado también, ya que si no se venden los tres productos, no se pagará la 
+penalización.
+\newpage
+Con este recuento de ingresos y gastos vamos a definir la función objetivo:
+
+\begin{center}
+máx. $z =  0.5\cdot(\sum_{j\in\mathrm{J}}^{}g_{jE}) + 0.45\cdot(\sum_{j\in\mathrm{J}}^{}g_{jP}) 
++ 0.6\cdot(\sum_{j\in\mathrm{J}}^{}g_{jF}) + 0.55\cdot(\sum_{j\in\mathrm{J}}^{}g_{jN}) + $
+
+$0.45\cdot(\sum_{j\in\mathrm{J}}^{}o_{jE})+ 0.55\cdot(\sum_{j\in\mathrm{J}}^{}o_{jP}) + 
+0.45\cdot(\sum_{j\in\mathrm{J}}^{}o_{jF}) + 0.35\cdot(\sum_{j\in\mathrm{J}}^{}o_{jN})+$
+
+$0.15\cdot(\sum_{j\in\mathrm{J}}^{}q_{jE})+ 0.10\cdot(\sum_{j\in\mathrm{J}}^{}q_{jP}) + 
+0.15\cdot(\sum_{j\in\mathrm{J}}^{}q_{jF}) + 0.12\cdot(\sum_{j\in\mathrm{J}}^{}q_{jN})$
+
+$- \Bigl[47\cdot(\sum_{j\in\mathrm{J}}^{}x_{Aj})+ 49\cdot(\sum_{j\in\mathrm{J}}^{}x_{Bj}) 
++ 53\cdot(\sum_{j\in\mathrm{J}}^{}x_{Cj}) + 51\cdot(\sum_{j\in\mathrm{J}}^{}x_{Dj})$
+
+$ + 0.4\cdot x_{A1} + 0.3\cdot x_{A2} + 0.3\cdot x_{A3} $
+
+$ + 0.4\cdot x_{B1} + 0.4\cdot x_{B2} + 0.4\cdot x_{B3}$
+
+$ + 0.2\cdot x_{C1} + 0.5\cdot x_{C2} + 0.4\cdot x_{C3}$
+
+$ + 0.4\cdot x_{D1} + 0.3\cdot x_{D2} + 0.2\cdot x_{D3}$
+
+$+0.021\cdot (72\cdot x_{A1}+80\cdot x_{B1} + 69\cdot x_{C1} + 80\cdot x_{D1})$
+
+$+ 0.011\cdot (72\cdot x_{A2}+80\cdot x_{B2} + 69\cdot x_{C2} + 80\cdot x_{D2})$
+
+$ + 0.013\cdot (72\cdot x_{A3}+80\cdot x_{B3} + 69\cdot x_{C3} + 80\cdot x_{D3})$
+
+$+ 0.015\cdot (35\cdot x_{A1}+37\cdot x_{B1} + 50\cdot x_{C1} + 20\cdot x_{D1})$
+
+$ + 0.062\cdot (35\cdot x_{A2}+37\cdot x_{B2} + 50\cdot x_{C2} + 20\cdot x_{D2})$
+
+$+ 0.082\cdot (35\cdot x_{A3}+37\cdot x_{B3} + 50\cdot x_{C3} + 20\cdot x_{D3})$
+
+$ + 0.010\cdot (10\cdot x_{A1}+12\cdot x_{B1} + 8\cdot x_{C1} + 15\cdot x_{D1})$
+
+$ + 0.033\cdot (10\cdot x_{A2}+12\cdot x_{B2} + 8\cdot x_{C2} + 15\cdot x_{D2})$
+
+$ + 0.041\cdot (10\cdot x_{A3}+12\cdot x_{B3} + 8\cdot x_{C3} + 15\cdot x_{D3})$
+
+$ + 500000\cdot br_{r1} + 700000 \cdot br_{r2} + 750000 \cdot br_{3}$
+
+$ + 100000\cdot p_{1}\Bigr]$
+
+\end{center}
+
+Las restricciones son las siguientes:\newline
+Restricciones de mínimo de compra de suministro (4 restricciones):
+\begin{center}
+$\sum_{j\in\mathrm{J}}^{}x_{ij} \geq 100000\cdot bpide_i$, para cada $i\in\mathrm{I}$
+\end{center}
+Restricciones de máximo de compra de suministro (4 restricciones):
+\begin{center}
+$\sum_{j\in\mathrm{J}}^{}x_{ij} \leq 500000\cdot bpide_i$, para cada $i\in\mathrm{I}$
+\end{center}
+
+Restricciones por demandas (12 restricciones):
+\begin{center}
+$\sum_{j\in\mathrm{J}}^{}g_{jk}\leq\beta_{kG}$ para cada $k\in\mathrm{K}$
+
+$\sum_{j\in\mathrm{J}}^{}o_{jk}\leq\beta_{kO}$ para cada $k\in\mathrm{K}$
+
+$\sum_{j\in\mathrm{J}}^{}q_{jk}\leq\beta_{kQ}$ para cada $k\in\mathrm{K}$
+\end{center}
+
+Restricciones de producción-recursos (9 restricciones):
+\begin{center}
+    $\sum_{k\in\mathrm{K}}^{}g_{jk}\leq \sum_{i\in\mathrm{I}}^{}x_{ij}\cdot\alpha_{iG}$, para cada $j\in\mathrm{J}$
+
+    $\sum_{k\in\mathrm{K}}^{}o_{jk}\leq \sum_{i\in\mathrm{I}}^{} x_{ij}\cdot\alpha_{iO}$, para cada $j\in\mathrm{J}$
+
+    $\sum_{k\in\mathrm{K}}^{}q_{jk}\leq \sum_{i\in\mathrm{I}}^{} x_{ij}\cdot\alpha_{iQ}$, para cada $j\in\mathrm{J}$
+
+\end{center}
+
+Restricción de uso de dos refinerías como máximo (1 restricción):
+\begin{center}
+    $\sum_{i\in\mathrm{I}}^{}br_i \leq 2$
+\end{center}
+
+Restricción de compra ligada al valor máximo que se puede comprar a los suministradores y a 
+la actividad de la refinería (3 restricciones):
+\begin{center}
+    $\sum_{i\in\mathrm{I}}^{}x_{ij}\leq 2000000\cdot br_{j}$, para cada $j\in\mathrm{J}$
+\end{center}
+Restricciones de mínima atención a los mercados por parte de las refinerías (3 restricciones):
+\begin{center}
+    $\sum_{k\in\mathrm{K}}^{}bm_{jk}\geq2\cdot br_j$, para cada $j\in\mathrm{J}$
+\end{center}
+Restricciones de máxima atención a los mercados por parte de las refinerías (3 restricciones):
+\begin{center}
+    $\sum_{k\in\mathrm{K}}^{}bm_{jk}\leq 3\cdot br_j$, para cada $j\in\mathrm{J}$
+\end{center}
+Restricciones de producción para cada refinería (12 restricciones):
+\begin{center}
+    $g_{jk} + o_{jk} + q_{jk}\leq 20000000000\cdot bm_{jk}$, para cada $j\in\mathrm{J}$ y para cada 
+    $k\in\mathrm{K}$
+\end{center}
+Restricciones de mínima variedad de suministradores para cada refinería (3 restricciones):
+\begin{center}
+    $\sum_{i\in\mathrm{I}}^{}bs_{ij}\geq 2\cdot br_j$, para cada $j\in\mathrm{J}$
+\end{center}
+Restricciones de máxima variedad de suministradores para cada refinería (3 restricciones):
+\begin{center}
+    $\sum_{i\in\mathrm{I}}^{}bs_{ij}\leq 3\cdot br_j$, para cada $j\in\mathrm{J}$
+\end{center}
+Restricciones de compra a cada suministrador por cada refinería (12 restricciones):
+\begin{center}
+    $x_{ij}\leq 500000 \cdot bs_{ij}$, para cada $i\in\mathrm{I}$ y para cada $j\in\mathrm{J}$
+\end{center}
+Restricciones para controlar la penalización de Portugal (5 restricciones):
+\begin{center}
+    $bm_{1p}\leq \sum_{p\in\mathrm{P}}^{}b_{p}$ (si está activo el mercado refinería 1-Portugal, se vende 
+    por lo menos un producto)
+
+    $\sum_{p\in\mathrm{P}}^{}b_{p}\leq 2+p_1$ (si se venden los tres productos a Portugal, obligatoriamente se 
+    activa la penalización)
+    
+    $b_{p}\leq bm_{1P}$, para cada $p\in\mathrm{P}$
+\end{center}
+Restricciones para relacionar la producción de la refinería 1 con sus respectivas variables binarias (3 restricciones):
+\begin{center}
+    $g_{1P}\leq 100000000\cdot b_{g}$
+
+    $o_{1P}\leq 60000000\cdot b_{o}$
+    
+    $q_{1P}\leq 30000000\cdot b_{q}$
+\end{center}
+Restricciones para relacionar las variables binarias de uso de suministradores con el mercado entre 
+suministradores y refinerías (4 restricciones):
+\begin{center}
+    $\sum_{j\in\mathrm{J}}^{}bs_{ij} \leq 3\cdot bpide_{i}$, para cada $i\in\mathrm{I}$
+\end{center}
+Restricción para definir el total comprado (1 restricción):
+\begin{center}
+    $t_c = \sum_{i\in\mathrm{I}}^{}\sum_{j\in\mathrm{J}}^{}x_{ij}$
+\end{center}
+Restricciones de mínimo de compra en caso de que un suministrador sea seleccionado (4 restricciones):
+\begin{center}
+    $\sum_{j\in\mathrm{J}}^{}x_{ij}\geq 0.2\cdot t_c - (1-bpide_i)\cdot 2000000$, para cada $i\in\mathrm{I}$
+\end{center}
+Restricciones de máximo de compra en caso de que un suministrador sea seleccionado (4 restricciones):
+\begin{center}
+    $\sum_{j\in\mathrm{J}}^{}x_{ij}\leq 0.6\cdot t_c + (1-bpide_i)\cdot 2000000$, para cada $i\in\mathrm{I}$
+\end{center}
+
+En estas últimas restricciones hemos mantenido la linealidad del problema utilizando un valor alto en caso de que 
+la refinería no sea utilizada.
+
+Utilizaremos este modelo para obtener una solución en GAMS.
+
+
+
+
+
+
+
+
+
+
+%------------------------------------------------------------------------------------------------------------------------------------------------
+
+\section{Solución propuesta. Segunda parte}
+\begin{table}[H]
+    \centering
+    \begin{adjustbox}{max width=\textwidth}
+    \begin{tabular}{|c|c|c|c|c|c|c|c|}
+    
+    \hline
+    Variable & Valor & Variables & Valor & Variable & Valor & Variable & Valor \\
+    \hline
+    $x_{A1}$ & 149013.4175 & $g_{1E}$ & 14182005 & $o_{1E}$ & 15000000 & $q_{1E}$ & 7258089.9763 \\ \hline
+    $x_{A2}$ & 171428.5714 & $g_{2E}$ & 5817995.2644 & $o_{2E}$ & 0 & $q_{2E}$ & 1714285.7143 \\\hline
+    $x_{A3}$ & 0 & $g_{3E}$ & 0 & $o_{3E}$ & 0 & $q_{3E}$ & 0 \\\hline
+    $x_{B1}$ & 480662.9834 & $g_{1P}$ & 0 & $o_{1P}$ & 0 & $q_{1P}$ & 0 \\\hline
+    $x_{B2}$ & 0 & $g_{2P}$ & 6524861.8785 & $o_{2P}$ & 6000000 & $q_{2P}$ & 0 \\\hline
+    $x_{B3}$ & 0 & $g_{3P}$ & 0 & $o_{3P}$ & 0 & $q_{3P}$ & 0 \\\hline
+    $x_{C1}$ & 0 & $g_{1F}$ & 10000000 & $o_{1F}$ & 8000000 & $q_{1F}$ & 0 \\\hline
+    $x_{C2}$ & 0 & $g_{2F}$ & 0 & $o_{2F}$ & 0 & $q_{2F}$ & 0 \\\hline
+    $x_{C3}$ & 0 & $g_{3F}$ & 0 & $o_{3F}$ & 0 & $q_{3F}$ & 0 \\\hline
+    $x_{D1}$ & 0 & $g_{1N}$ & 25000000 & $o_{1N}$ & 0 & $q_{1N}$ & 0 \\\hline
+    $x_{D2}$ & 0 & $g_{2N}$ & 0 & $o_{2N}$ & 0 & $q_{2N}$ & 0 \\\hline
+    $x_{D3}$ & 0 & $g_{3N}$ & 0 & $o_{3N}$ & 0 & $q_{3N}$ & 0 \\
+    \hline
+    \end{tabular}
+\end{adjustbox}
+    \caption{Tabla de valores de las variables continuas de la segunda parte del problema}
+    \end{table}
+    \begin{table}[H]
+        \centering
+        \begin{adjustbox}{max width=\textwidth}
+        \begin{tabular}{|c|c|c|c|c|c|c|c|}
+        \hline
+        Variable & Valor & Variable & Valor & Variable & Valor & Variable & Valor \\
+        \hline
+        $br_1$ & 1 & $bm_{2P}$ & 1 & $bs_{A2}$ & 1 &$ bs_{D1}$ & 0 \\ \hline
+        $br_2$ & 1 & $bm_{2F}$ & 0 & $bs_{A3}$ & 0 &$ bs_{D2}$ & 0 \\ \hline
+        $br_3 $& 0 & $bm_{2N}$& 1 & $bs_{B1}$ & 1 & $bs_{D3}$ & 0 \\ \hline
+        $bm_{1E}$ & 1 & $bm_{3E}$ & 0 & $bs_{B2}$ & 1 & $p_1 $& 0 \\ \hline
+        $bm_{1P}$ & 0 & $bm_{3P}$ & 0 & $bs_{B3}$ & 0 & $b_o $& 0 \\ \hline
+        $bm_{1F}$ & 1 & $bm_{3F}$ & 0 & $bs_{C1}$ & 0 & $b_q $& 0 \\ \hline
+        $bm_{1N}$ & 1 & $bm_{3N}$ & 0 & $bs_{C2}$ & 0 & $b_g $& 0 \\ \hline
+        $bm_{2E}$ & 1 & $bs_{A1}$ & 1 & $bs_{C3}$ & 0 & & \\
+        \hline
+        \end{tabular}
+    \end{adjustbox}
+        \caption{Tabla de valores de las variables binarias de la segunda parte del problema}
+        \end{table}
+
+En la solución obtenida observamos que el óptimo se alcanza utilizando las refinerías 
+1 y 2 y comprando materia prima a los suministradores A y B, en caso de la refinería 1, y a la refinería 
+A, en caso de la refinería 2. Observamos también que la refinería 1 compra casi el máximo de producto al 
+suministrador B.
+
+A la hora de vender, los mercados activos son los de la refinería 1 con España, Francia y el Norte de África, 
+evitando activar la penalización con Portugal, y los de la refinería 2 con España, Portugal y el Norte de África. 
+
+En cuanto a las cantidades exportadas, los valores son los siguientes para la refinería 1. De gasolina se enviarán
+14182005 litros a España, 10000000 litros a Francia y 25000000 al Norte de África. En cuanto al gas-oil, se exportan 
+15000000 litros a España y 8000000 litros a Francia. Finalmente, desde la refinería 1 se enviará también 
+queroseno a España 7258089.97 litros y a Francia 1714285.71 litros.
+
+La refinería 2 exportará gasolina a España, 5817995.26 litros, y a Portugal, 6524861.87 litros. 
+El próximo y 
+último producto que se enviará desde esta refinería es gas-oil, en concreto 6000000 litros a Portugal.
+
+Con esta gestión de suministros y productos se obtiene un beneficio total de 5550739.54 euros.
+
+Observamos que, al igual que en la primera parte, se mantiene una gran actividad en la refinería 1, ya que 
+sus costes asociados son los más bajos. Debido a las nuevas restricciones, se ha evitado la penalización 
+concentrando el mercado portugués en la refinería 2. Además, los demás recursos que no se han podido adquirir desde 
+la refinería 1 han pasado a la refinería 2, la segunda más rentable respecto de sus costes asociados.
+
+Se aprecia, además, una disminución de las ganancias respecto del problema inicial del 11.3\%, lo cual 
+era de esperar al reducir la región factible del problema.
+\begin{center}
+    \includegraphics[scale=0.4]{grafo_p2}
+    \captionof{figure}[LOF entry]{Grafo ilustrativo de la solución óptima de GAMS. Segunda parte}   
+    \label{fig:picture}
+  \end{center}
+
+
+%-----------------------------------------------------------------------------------------------------------------------------------------------
+
+\section{Participación de los miembros en el trabajo}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{l|l|l|l|}
+    \cline{2-4}
+                                                  & Daniela & David & Rodrigo \\ \hline
+    \multicolumn{1}{|l|}{Desarrollo del modelo}   & Alta    & Media &  Alta   \\ \hline
+    \multicolumn{1}{|l|}{Implementación}          & Baja    & Baja  &  Alta   \\ \hline
+    \multicolumn{1}{|l|}{Depuración y validación} & Alta    & Alta  &  Alta   \\ \hline
+    \multicolumn{1}{|l|}{Análisis de la solución} & Media   & Alta  &  Alta   \\ \hline
+    \multicolumn{1}{|l|}{Redacción de la memoria} & Alta    & Baja  &  Baja   \\ \hline
+    \end{tabular}
+    \caption{Tabla de participación en la primera parte}
+    \end{table}
+
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{l|l|l|l|}
+        \cline{2-4}
+                                                      & Daniela & David & Rodrigo \\ \hline
+        \multicolumn{1}{|l|}{Desarrollo del modelo}   & Baja    & Baja &  Alta   \\ \hline
+        \multicolumn{1}{|l|}{Implementación}          & Baja    & Baja  &  Alta   \\ \hline
+        \multicolumn{1}{|l|}{Depuración y validación} & Baja    & Baja  &  Alta   \\ \hline
+        \multicolumn{1}{|l|}{Análisis de la solución} & Alta   & Baja  &  Media   \\ \hline
+        \multicolumn{1}{|l|}{Redacción de la memoria} & Alta    & Media  &  Baja   \\ \hline
+        \end{tabular}
+        \caption{Tabla de participación en la segunda parte}
+        \end{table}
+\end{document}
